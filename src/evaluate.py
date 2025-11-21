@@ -1,8 +1,7 @@
-# src/evaluate.py
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, cohen_kappa_score, classification_report
 
 def evaluate_model(model, X_test, y_test):
-    """Evalúa un modelo de Keras o sklearn y devuelve métricas."""
+    """Evaluates a model from Keras or sklearn and returns metrics."""
     y_pred_prob = model.predict(X_test)
     y_pred = (y_pred_prob > 0.5).astype(int)
 

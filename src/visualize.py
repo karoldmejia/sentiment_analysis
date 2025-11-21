@@ -1,12 +1,10 @@
-# src/visualize.py
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from sklearn.metrics import confusion_matrix, roc_curve, auc, precision_recall_curve
 
 
-# Curvas de entrenamiento (accuracy y loss)
-
+# Training curves (accuracy and loss)
 def plot_training_history(history, title="Training History"):
     plt.figure(figsize=(12, 5))
     
@@ -36,7 +34,27 @@ def plot_training_history(history, title="Training History"):
     plt.tight_layout()
     plt.show()
 
-# Matriz de confusión
+# Comparison of training histories
+def compare_training_histories(histories_dict, metric='accuracy', title="Training Comparison"):
+    """
+    histories_dict: dict with key=model_name and value=history
+    metric: 'accuracy' or 'loss'
+    """
+    plt.figure(figsize=(8, 5))
+    colors = sns.color_palette("Set2", len(histories_dict))
+    
+    for i, (name, history) in enumerate(histories_dict.items()):
+        plt.plot(history.history[metric], label=f'{name} Train', color=colors[i], linestyle='-')
+        plt.plot(history.history[f'val_{metric}'], label=f'{name} Val', color=colors[i], linestyle='--')
+    
+    plt.title(title)
+    plt.xlabel('Epoch')
+    plt.ylabel(metric.capitalize())
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+# Confusion matrix
 def plot_confusion_matrix(y_true, y_pred, labels=["Negative", "Positive"], title="Confusion Matrix"):
     cm = confusion_matrix(y_true, y_pred)
     plt.figure(figsize=(5, 4))
@@ -47,8 +65,7 @@ def plot_confusion_matrix(y_true, y_pred, labels=["Negative", "Positive"], title
     plt.title(title)
     plt.show()
 
-
-
+# ROC Curve and AUC
 # Curva ROC y AUC
 def plot_roc_curve(y_true, y_pred_prob, title="ROC Curve"):
     fpr, tpr, _ = roc_curve(y_true, y_pred_prob)
@@ -64,7 +81,7 @@ def plot_roc_curve(y_true, y_pred_prob, title="ROC Curve"):
     plt.grid(True)
     plt.show()
 
-# Curva Precision-Recall
+# Precision-Recall Curve
 def plot_precision_recall(y_true, y_pred_prob, title="Precision-Recall Curve"):
     precision, recall, _ = precision_recall_curve(y_true, y_pred_prob)
 
@@ -77,7 +94,7 @@ def plot_precision_recall(y_true, y_pred_prob, title="Precision-Recall Curve"):
     plt.show()
 
 
-# Comparación de métricas entre modelos
+# Comparison of metrics across models
 def compare_metrics(results_dict):
     metrics = ["accuracy", "precision", "recall", "f1"]
     models = list(results_dict.keys())
